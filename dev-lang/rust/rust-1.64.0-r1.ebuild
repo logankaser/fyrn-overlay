@@ -297,7 +297,7 @@ src_prepare() {
 src_configure() {
 	filter-flags '-flto*' # https://bugs.gentoo.org/862109 https://bugs.gentoo.org/866231
 
-	local rust_target="" rust_targets="" arch_cflags use_libcxx="false"
+	local rust_target="" rust_targets="" arch_cflags use_libcxx="true"
 
 	# Collect rust target names to compile standard libs for all ABIs.
 	for v in $(multilib_get_enabled_abi_pairs); do
@@ -334,14 +334,6 @@ src_configure() {
 	[[ -d ${rust_stage0_root} ]] || die "${rust_stage0_root} is not a directory"
 
 	rust_target="$(rust_abi)"
-
-	# https://bugs.gentoo.org/732632
-	if tc-is-clang; then
-		local clang_slot="$(clang-major-version)"
-		if { has_version "sys-devel/clang-common:${clang_slot}[default-libcxx]" || is-flagq -stdlib=libc++; }; then
-			use_libcxx="true"
-		fi
-	fi
 
 	local cm_btype="$(usex debug DEBUG RELEASE)"
 	cat <<- _EOF_ > "${S}"/config.toml
