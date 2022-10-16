@@ -6,7 +6,7 @@ EAPI=8
 PYTHON_COMPAT=( python3_{8..10} )
 PYTHON_REQ_USE="threads(+)"
 
-inherit bash-completion-r1 flag-o-matic pax-utils python-any-r1 toolchain-funcs xdg-utils
+inherit bash-completion-r1 flag-o-matic pax-utils python-any-r1 toolchain-funcs xdg-utils ninja-utils
 
 DESCRIPTION="A JavaScript runtime built on Chrome's V8 JavaScript engine"
 HOMEPAGE="https://nodejs.org/"
@@ -38,7 +38,7 @@ RDEPEND=">=app-arch/brotli-1.0.9:=
 	sys-libs/zlib
 	system-icu? ( >=dev-libs/icu-67:= )
 	system-ssl? ( >=dev-libs/openssl-1.1.1:0= )"
-BDEPEND="${PYTHON_DEPS}
+BDEPEND="${PYTHON_DEPS} ${NINJA_DEPEND}
 	sys-apps/coreutils
 	virtual/pkgconfig
 	systemtap? ( dev-util/systemtap )
@@ -105,6 +105,7 @@ src_configure() {
 		--shared-libuv
 		--shared-nghttp2
 		--shared-zlib
+		--ninja
 	)
 	use debug && myconf+=( --debug )
 	use lto && myconf+=( --enable-lto )
@@ -147,7 +148,7 @@ src_configure() {
 }
 
 src_compile() {
-	emake -C out
+	eninja -C out/Release
 }
 
 src_install() {
