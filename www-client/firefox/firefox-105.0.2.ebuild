@@ -127,7 +127,6 @@ COMMON_DEPEND="${FF_ONLY_DEPEND}
 	dev-libs/expat
 	dev-libs/glib:2
 	dev-libs/libffi:=
-	>=dev-libs/nss-3.82
 	>=dev-libs/nspr-4.34.1
 	media-libs/alsa-lib
 	media-libs/fontconfig
@@ -745,7 +744,6 @@ src_configure() {
 		--with-intl-api \
 		--with-libclang-path="$(llvm-config --libdir)" \
 		--with-system-nspr \
-		--with-system-nss \
 		--with-system-zlib \
 		--with-toolchain-prefix="${CHOST}-" \
 		--with-unsigned-addon-scopes=app,system \
